@@ -1,10 +1,7 @@
 import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator} from "react-native";
-import dummyMenuData from "../data/dummyMenuData";
 import {useCallback, useEffect, useState} from "react";
-import {useSetRecoilState} from "recoil";
-import {menuData} from "../data/recoil";
-import {useFocusEffect} from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useFocusEffect} from "@react-navigation/native";
 
 
 export default function MainScreen({navigation}) {
@@ -13,20 +10,20 @@ export default function MainScreen({navigation}) {
     const [menuDataList, setMenuDataList] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const saveData = async () => {
-        try {
-            const jsonValue = JSON.stringify(dummyMenuData);
-            await AsyncStorage.setItem('menuData', jsonValue);
-        } catch (e) {
-            console.error('Failed to save data to AsyncStorage:', e);
-        }
-    };
+    // const saveData = async () => {
+    //     try {
+    //         const jsonValue = JSON.stringify(dummyMenuData);
+    //         await AsyncStorage.setItem('menuData', jsonValue);
+    //     } catch (e) {
+    //         console.error('Failed to save data to AsyncStorage:', e);
+    //     }
+    // };
 
     const loadData = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem('menuData');
             if (jsonValue != null) {
-                setMenuDataList(JSON.parse(jsonValue));
+                setMenuDataList(JSON.parse(jsonValue).reverse());
             }
         } catch (e) {
             console.error('Failed to load data from AsyncStorage:', e);
@@ -35,15 +32,17 @@ export default function MainScreen({navigation}) {
         }
     };
 
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         saveData();
+    //     }, [])
+    // );
+
     useFocusEffect(
         useCallback(() => {
-            saveData();
+            loadData();
         }, [])
     );
-
-    useEffect(() => {
-        loadData();
-    }, []);
 
     if (loading) {
         return (
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         paddingVertical: 15,
     },
     title: {
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 10,
         backgroundColor: 'rgba(178, 178, 178, 0.2)',
-        marginBottom: 20,
+        marginBottom: 15,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
