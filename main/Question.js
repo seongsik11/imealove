@@ -3,22 +3,26 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'r
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-const Question = ({navigation}) => {
+const Question = ({ navigation }) => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
+    const [isSending, setIsSending] = useState(false);
 
     const handleSend = async () => {
-        if (input.trim()) {
+        if (input.trim() && !isSending) {
             const userMessage = { id: Math.random().toString(), text: input, type: 'user' };
             setMessages([...messages, userMessage]);
+            setIsSending(true);
 
             try {
-                const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+                const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+                    model: "gpt-3.5-turbo",
                     prompt: input,
                     max_tokens: 150,
+                    temperature: 0.7,
                 }, {
                     headers: {
-                        'Authorization': `Bearer YOUR_API_KEY`,
+                        'Authorization': `Bearer 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`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -30,6 +34,7 @@ const Question = ({navigation}) => {
             }
 
             setInput('');
+            setTimeout(() => setIsSending(false), 1000); // 1초 지연
         }
     };
 
@@ -88,8 +93,11 @@ const Question = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
+        position: 'relative',
         flex: 1,
         backgroundColor: '#fff',
+        paddingHorizontal: 10,
+        paddingVertical: 15,
     },
     header: {
         paddingTop: 50,
