@@ -77,7 +77,7 @@ export default function MainScreen({navigation}) {
     };
 
     const goMainScreen = () => {
-        navigation.navigate('MainScreen');
+        navigation.navigate('Main');
     }
 
     const onAddMenu = () => {
