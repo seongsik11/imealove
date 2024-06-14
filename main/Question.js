@@ -7,31 +7,7 @@ const Question = ({navigation}) => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
 
-    const handleSend = async () => {
-        if (input.trim()) {
-            const userMessage = { id: Math.random().toString(), text: input, type: 'user' };
-            setMessages([...messages, userMessage]);
 
-            try {
-                const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                    prompt: input,
-                    max_tokens: 150,
-                }, {
-                    headers: {
-                        'Authorization': `Bearer YOUR_API_KEY`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                const gptMessage = { id: Math.random().toString(), text: response.data.choices[0].text.trim(), type: 'gpt' };
-                setMessages([...messages, userMessage, gptMessage]);
-            } catch (error) {
-                console.error(error);
-            }
-
-            setInput('');
-        }
-    };
 
     const goMainScreen = () => {
         navigation.navigate('Main');
