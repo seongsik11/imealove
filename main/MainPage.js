@@ -1,7 +1,12 @@
-import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator} from "react-native";
 import {useCallback, useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useFocusEffect} from "@react-navigation/native";
+import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator, TouchableOpacity} from "react-native";
+import dummyMenuData from "../data/dummyMenuData";
+import {useSetRecoilState} from "recoil";
+import {menuData} from "../data/recoil";
+import Icon from "react-native-vector-icons/Ionicons";
+
 
 
 export default function MainScreen({navigation}) {
@@ -71,8 +76,16 @@ export default function MainScreen({navigation}) {
         );
     };
 
+    const goMainScreen = () => {
+        navigation.navigate('MainScreen');
+    }
+
     const onAddMenu = () => {
         navigation.navigate('AddMenu');
+    }
+
+    const goQuestion = () => {
+        navigation.navigate('Question');
     }
 
 
@@ -84,12 +97,17 @@ export default function MainScreen({navigation}) {
                     keyExtractor={item => item.date}
                     showsVerticalScrollIndicator={false}
                 />
-                <Pressable style={{flex: 1, alignItems:'center', justifyContent:'center',
-                                    position: 'absolute', bottom: 80, right: 20, width: 60, height: 60, borderRadius: 50, backgroundColor:'#E08582'}}
-                           onPress={onAddMenu}
-                >
-                    <Text style={{fontSize: 28, fontWeight: 700,color: '#fff', alignSelf: 'center', lineHeight: 40}}>+</Text>
-                </Pressable>
+            <View style={styles.footer}>
+                <TouchableOpacity style={styles.footerButton} onPress={goMainScreen}>
+                    <Icon name="home-outline" size={30} color="#5E5E5E" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.footerButton} onPress={onAddMenu}>
+                    <Icon name="add-circle-outline" size={40} color="#FF1493" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.footerButton} onPress={goQuestion}>
+                    <Icon name="search-outline" size={30} color="#5E5E5E" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -151,5 +169,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         shadowColor: 'transparent',  // Remove shadow
         elevation: 0,  // Remove elevation
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: 60,
+        borderTopWidth: 1,
+        borderTopColor: '#eaeaea',
+        backgroundColor: '#fff',
+    },
+    footerButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
     },
 });
