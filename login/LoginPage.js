@@ -44,7 +44,7 @@ export default function LoginPage({ navigation }) {
         <View style={styles.container}>
             <Pressable
                 style={styles.backButton}
-                onPress={() => navigation.navigate('Login')}>
+                onPress={() => navigation.navigate('Home')}>
                 <Text style={{ color: '#666', fontSize: 40, alignSelf: 'flex-start' }}>⤺ <Text style={{ fontSize: 18 }}>back</Text></Text>
             </Pressable>
             <Text style={styles.title}>LOG IN</Text>
@@ -54,6 +54,7 @@ export default function LoginPage({ navigation }) {
                     placeholder="Email"
                     value={email}
                     onChangeText={(text) => handleInputChange(text, 'email')}
+                    autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
@@ -61,6 +62,7 @@ export default function LoginPage({ navigation }) {
                     placeholder="Password"
                     value={password}
                     onChangeText={(text) => handleInputChange(text, 'password')}
+                    autoCapitalize="none"
                 />
                 <View style={styles.checkboxContainer}>
                     <CheckBox

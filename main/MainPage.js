@@ -1,12 +1,9 @@
+import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator} from "react-native";
 import {useCallback, useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useFocusEffect} from "@react-navigation/native";
-import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator, TouchableOpacity} from "react-native";
-import dummyMenuData from "../data/dummyMenuData";
-import {useSetRecoilState} from "recoil";
-import {menuData} from "../data/recoil";
-import Icon from "react-native-vector-icons/Ionicons";
-
+import {Ionicons} from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
 
 
 export default function MainScreen({navigation}) {
@@ -76,38 +73,31 @@ export default function MainScreen({navigation}) {
         );
     };
 
-    const goMainScreen = () => {
-        navigation.navigate('Main');
-    }
-
     const onAddMenu = () => {
         navigation.navigate('AddMenu');
     }
 
-    const goQuestion = () => {
-        navigation.navigate('Question');
-    }
-
-
     return (
         <View style={styles.container}>
+            {menuDataList === null ?
+                <View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
+                    <Entypo name="add-to-list" size={60} color="#E08582" />
+                    <Text style={{ fontSize:20, color:'#E08582', fontWeight:700,marginBottom: 150}}>식단을 추가해보세요!</Text>
+                </View>
+                :
                 <FlatList
                     data={menuDataList}
                     renderItem={renderItem}
                     keyExtractor={item => item.date}
                     showsVerticalScrollIndicator={false}
                 />
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton} onPress={goMainScreen}>
-                    <Icon name="home-outline" size={30} color="#5E5E5E" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton} onPress={onAddMenu}>
-                    <Icon name="add-circle-outline" size={40} color="#FF1493" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.footerButton} onPress={goQuestion}>
-                    <Icon name="search-outline" size={30} color="#5E5E5E" />
-                </TouchableOpacity>
-            </View>
+            }
+                <Pressable style={{flex: 1, alignItems:'center', justifyContent:'center',
+                                    position: 'absolute', bottom: 80, right: 20, width: 60, height: 60, borderRadius: 50, backgroundColor:'#E08582'}}
+                           onPress={onAddMenu}
+                >
+                    <Text style={{fontSize: 28, fontWeight: 700,color: '#fff', alignSelf: 'center', lineHeight: 40}}>+</Text>
+                </Pressable>
         </View>
     );
 }
@@ -119,6 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingHorizontal: 20,
         paddingVertical: 15,
+        justifyContent:'center',
     },
     title: {
         fontSize: 36,
@@ -169,19 +160,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         shadowColor: 'transparent',  // Remove shadow
         elevation: 0,  // Remove elevation
-    },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 60,
-        borderTopWidth: 1,
-        borderTopColor: '#eaeaea',
-        backgroundColor: '#fff',
-    },
-    footerButton: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
     },
 });
