@@ -10,7 +10,8 @@ const Question = ({ navigation }) => {
     const handleSend = () => {
         if (input.trim() && !isSending) {
             const userMessage = { id: Math.random().toString(), text: input, type: 'user' };
-            const fixedResponse = { id: Math.random().toString(), text: "", type: 'gpt' };
+            const fixedResponse = { id: Math.random().toString(), text: "식단 중에 라면을 드시고 싶을 때는 일주일에 한 번의 치팅데이를 잡으시고 그 날에 라면 을 드시는 것이 좋을 것 같습니다. 다만,\n" +
+                    "식단 중에 라면은 좋지 않아 권장 드리지 않습니다!", type: 'gpt' };
             setMessages([...messages, userMessage, fixedResponse]);
 
             setInput('');
@@ -33,9 +34,6 @@ const Question = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>AI 식단 질문 창고</Text>
-            </View>
             <FlatList
                 data={messages}
                 keyExtractor={item => item.id}
