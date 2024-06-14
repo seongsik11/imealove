@@ -9,6 +9,8 @@ import MenuDetails from "./main/MenuDetails";
 import {RecoilRoot} from "recoil";
 import AddMenu from "./main/AddMenu";
 import { MaterialIcons } from '@expo/vector-icons';
+import Question from "./main/Question";
+
 
 const Stack = createStackNavigator();
 
@@ -96,6 +98,20 @@ export default function App() {
               },
               headerTitleAlign: 'center',
           }}/>
+            <Stack.Screen
+                name="Question"
+                component={Question}
+                options={{
+                    headerShown: true,
+                    title: 'AI 식단 질문',
+                    headerTitleStyle: {
+                        fontSize: 22, // 원하는 폰트 사이즈로 설정
+                        fontWeight: 'bold', // 선택 사항: 폰트 무게
+                        color: '#5E5E5E'
+                    },
+                    headerTitleAlign: 'left',
+                    headerLeft: () => null,
+                }}/>
         </Stack.Navigator>
       </NavigationContainer>
       </RecoilRoot>
