@@ -95,6 +95,7 @@ export default function SignUpPage({ navigation }) {
                     placeholder="Email"
                     value={email}
                     onChangeText={(text) => handleInputChange(text, 'email')}
+                    autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
@@ -102,6 +103,7 @@ export default function SignUpPage({ navigation }) {
                     placeholder="Password"
                     value={password}
                     onChangeText={(text) => handleInputChange(text, 'password')}
+                    autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
@@ -109,12 +111,14 @@ export default function SignUpPage({ navigation }) {
                     placeholder="Password Confirm"
                     value={passwordConfirm}
                     onChangeText={(text) => handleInputChange(text, 'passwordConfirm')}
+                    autoCapitalize="none"
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Nickname"
                     value={nickname}
                     onChangeText={(text) => handleInputChange(text, 'nickname')}
+                    autoCapitalize="none"
                 />
                 <View style={styles.checkboxContainer}>
                     <CheckBox

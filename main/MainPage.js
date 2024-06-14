@@ -2,6 +2,8 @@ import {View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator} from "re
 import {useCallback, useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useFocusEffect} from "@react-navigation/native";
+import {Ionicons} from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
 
 
 export default function MainScreen({navigation}) {
@@ -75,15 +77,21 @@ export default function MainScreen({navigation}) {
         navigation.navigate('AddMenu');
     }
 
-
     return (
         <View style={styles.container}>
+            {menuDataList === null ?
+                <View style={{flex:1, flexDirection:'column', alignItems:'center', justifyContent:'center'}}>
+                    <Entypo name="add-to-list" size={60} color="#E08582" />
+                    <Text style={{ fontSize:20, color:'#E08582', fontWeight:700,marginBottom: 150}}>식단을 추가해보세요!</Text>
+                </View>
+                :
                 <FlatList
                     data={menuDataList}
                     renderItem={renderItem}
                     keyExtractor={item => item.date}
                     showsVerticalScrollIndicator={false}
                 />
+            }
                 <Pressable style={{flex: 1, alignItems:'center', justifyContent:'center',
                                     position: 'absolute', bottom: 80, right: 20, width: 60, height: 60, borderRadius: 50, backgroundColor:'#E08582'}}
                            onPress={onAddMenu}
@@ -101,6 +109,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingHorizontal: 20,
         paddingVertical: 15,
+        justifyContent:'center',
     },
     title: {
         fontSize: 36,
