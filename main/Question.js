@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import loading from '../assets/Group1.png';
-import dietPlanImage from '../assets/imagez.png'; // 실제 이미지 경로로 변경
+import dietPlanImage from '../assets/imagez.png';
+import ImageView from 'react-native-image-viewing';
 
 const Question = ({ navigation }) => {
     const [input, setInput] = useState('');
@@ -10,6 +11,8 @@ const Question = ({ navigation }) => {
     const [isSending, setIsSending] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [responseStage, setResponseStage] = useState(0);
+    const [isImageViewVisible, setIsImageViewVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         const initialMessage = { id: 'initial', text: '궁금한 것을 물어보세요', type: 'gpt' };
@@ -57,6 +60,11 @@ const Question = ({ navigation }) => {
         navigation.navigate('Question');
     }
 
+    const handleImagePress = (imageUrl) => {
+        setSelectedImage(imageUrl);
+        setIsImageViewVisible(true);
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -76,7 +84,11 @@ const Question = ({ navigation }) => {
                         ) : (
                             <>
                                 <Text style={styles.messageText}>{item.text}</Text>
-                                {item.imageUrl && <Image source={item.imageUrl} style={styles.dietImage} />}
+                                {item.imageUrl && (
+                                    <TouchableOpacity onPress={() => handleImagePress(item.imageUrl)}>
+                                        <Image source={item.imageUrl} style={styles.dietImage} />
+                                    </TouchableOpacity>
+                                )}
                             </>
                         )}
                     </View>
@@ -105,6 +117,15 @@ const Question = ({ navigation }) => {
                     <Icon name="search-outline" size={30} color="#5E5E5E" />
                 </TouchableOpacity>
             </View>
+
+            {selectedImage && (
+                <ImageView
+                    images={[selectedImage]}
+                    imageIndex={0}
+                    visible={isImageViewVisible}
+                    onRequestClose={() => setIsImageViewVisible(false)}
+                />
+            )}
         </View>
     );
 }
