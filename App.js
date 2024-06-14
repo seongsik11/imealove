@@ -53,8 +53,7 @@ export default function App() {
               name="AddMenu"
               component={AddMenu}
               options={{
-              headerShown: true,
-              title: '식단 추가',
+              title: '식단 추가하기',
               headerTitleStyle: {
                   fontSize: 22,
                   fontWeight: 'bold',
