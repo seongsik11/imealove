@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import loading from '../assets/Group1.png';
+import dietPlanImage from '../assets/imagez.png'; // 실제 이미지 경로로 변경
 
 const Question = ({ navigation }) => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isSending, setIsSending] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [responseStage, setResponseStage] = useState(0);
+
+    useEffect(() => {
+        const initialMessage = { id: 'initial', text: '궁금한 것을 물어보세요', type: 'gpt' };
+        setMessages([initialMessage]);
+    }, []);
 
     const handleSend = () => {
         if (input.trim() && !isSending) {
@@ -18,7 +25,17 @@ const Question = ({ navigation }) => {
             setIsLoading(true);
 
             setTimeout(() => {
-                const fixedResponse = { id: Math.random().toString(), text: "식단 중에 라면을 드시고 싶을 때는 일주일에 한 번의 치팅데이를 잡으시고 그 날에 라면 을 드시는 것이 좋을 것 같습니다. 다만,\n식단 중에 라면은 좋지 않아 권장 드리지 않습니다!", type: 'gpt' };
+                let fixedResponse;
+                if (responseStage === 0) {
+                    fixedResponse = { id: Math.random().toString(), text: "네, 아이의 식습관을 고치는 것이 좋습니다. 일주일에 세 번 배달 음식을 먹는 것은 건강에 좋지 않을 수 있습니다. 균형 잡힌 식사와 건강한 식습관을 유지하도록 지도해 주세요.", type: 'gpt' };
+                    setResponseStage(1);
+                } else if (responseStage === 1) {
+                    fixedResponse = { id: Math.random().toString(), text: "아이의 나이와 키, 몸무게, 성별을 입력해주세요.", type: 'gpt' };
+                    setResponseStage(2);
+                } else {
+                    fixedResponse = { id: Math.random().toString(), text: "8살 남자 아이를 위한 맞춤 식단을 짜드릴게요. 성장기 아이의 영양 요구를 충족시키고 건강한 식습관을 기르는 데 중점을 두겠습니다.", type: 'gpt', imageUrl: dietPlanImage };
+                    setResponseStage(3);
+                }
                 setMessages(prevMessages => prevMessages.map(msg => msg.type === 'loading' ? fixedResponse : msg));
                 setIsLoading(false);
                 setIsSending(false);
@@ -57,7 +74,10 @@ const Question = ({ navigation }) => {
                         {item.type === 'loading' ? (
                             <Image source={loading} style={styles.loadingImage} />
                         ) : (
-                            <Text style={styles.messageText}>{item.text}</Text>
+                            <>
+                                <Text style={styles.messageText}>{item.text}</Text>
+                                {item.imageUrl && <Image source={item.imageUrl} style={styles.dietImage} />}
+                            </>
                         )}
                     </View>
                 )}
@@ -68,7 +88,7 @@ const Question = ({ navigation }) => {
                     style={styles.input}
                     value={input}
                     onChangeText={setInput}
-                    placeholder="우리 아이 식단을 입력하세요"
+                    placeholder="식단에 대한 궁금한 점을 물어보세요"
                 />
                 <TouchableOpacity onPress={handleSend} style={styles.sendButton} disabled={isSending}>
                     <Icon name="send-outline" size={24} color="#FF1493" />
@@ -160,6 +180,11 @@ const styles = StyleSheet.create({
     loadingImage: {
         width: 93,
         height: 35,
+    },
+    dietImage: {
+        width: 200,
+        height: 150,
+        marginTop: 10,
     },
     footer: {
         flexDirection: 'row',
