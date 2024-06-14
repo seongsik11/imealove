@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import loading from '../assets/Group1.png';
 
 const Question = ({ navigation }) => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isSending, setIsSending] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSend = () => {
         if (input.trim() && !isSending) {
             const userMessage = { id: Math.random().toString(), text: input, type: 'user' };
-            const fixedResponse = { id: Math.random().toString(), text: "식단 중에 라면을 드시고 싶을 때는 일주일에 한 번의 치팅데이를 잡으시고 그 날에 라면 을 드시는 것이 좋을 것 같습니다. 다만,\n" +
-                    "식단 중에 라면은 좋지 않아 권장 드리지 않습니다!", type: 'gpt' };
-            setMessages([...messages, userMessage, fixedResponse]);
-
+            setMessages([...messages, userMessage]);
             setInput('');
             setIsSending(true);
-            setTimeout(() => setIsSending(false), 3000); // 1초 지연
+            setIsLoading(true);
+
+            setTimeout(() => {
+                const fixedResponse = { id: Math.random().toString(), text: "식단 중에 라면을 드시고 싶을 때는 일주일에 한 번의 치팅데이를 잡으시고 그 날에 라면 을 드시는 것이 좋을 것 같습니다. 다만,\n식단 중에 라면은 좋지 않아 권장 드리지 않습니다!", type: 'gpt' };
+                setMessages(prevMessages => prevMessages.map(msg => msg.type === 'loading' ? fixedResponse : msg));
+                setIsLoading(false);
+                setIsSending(false);
+            }, 2000); // 2초 지연
+
+            setMessages(prevMessages => [...prevMessages, { id: 'loading', type: 'loading' }]);
         }
     };
 
@@ -38,8 +46,19 @@ const Question = ({ navigation }) => {
                 data={messages}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <View style={[styles.messageContainer, item.type === 'user' ? styles.userMessage : styles.gptMessage]}>
-                        <Text style={styles.messageText}>{item.text}</Text>
+                    <View style={[
+                        styles.messageContainer,
+                        item.type === 'user'
+                            ? styles.userMessage
+                            : item.type === 'loading'
+                                ? styles.loadingMessage
+                                : styles.gptMessage
+                    ]}>
+                        {item.type === 'loading' ? (
+                            <Image source={loading} style={styles.loadingImage} />
+                        ) : (
+                            <Text style={styles.messageText}>{item.text}</Text>
+                        )}
                     </View>
                 )}
                 style={styles.messagesList}
@@ -110,6 +129,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#E0E0E0',
         alignSelf: 'flex-start',
     },
+    loadingMessage: {
+        alignSelf: 'flex-start',
+    },
     messageText: {
         fontSize: 16,
     },
@@ -129,6 +151,15 @@ const styles = StyleSheet.create({
     },
     sendButton: {
         marginLeft: 10,
+    },
+    loadingContainer: {
+        alignSelf: 'flex-start',
+        marginVertical: 5,
+        padding: 10,
+    },
+    loadingImage: {
+        width: 93,
+        height: 35,
     },
     footer: {
         flexDirection: 'row',
